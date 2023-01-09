@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.0fa26b6f.css",
+    "main.js": "/static/js/main.ac673033.js",
+    "static/media/pro.png": "/static/media/pro.b9e0d842d61cf8dcd097.png",
+    "static/media/freshMandarin_1x.png": "/static/media/freshMandarin_1x.f67383e0e63de6afb180.png",
+    "static/media/tree_3_1x.png": "/static/media/tree_3_1x.30088b2223fb246643a5.png",
+    "static/media/tree_4_1x.png": "/static/media/tree_4_1x.6f01c047a2f97476c644.png",
+    "index.html": "/index.html",
+    "main.0fa26b6f.css.map": "/static/css/main.0fa26b6f.css.map",
+    "main.ac673033.js.map": "/static/js/main.ac673033.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0fa26b6f.css",
+    "static/js/main.ac673033.js"
+  ]
+}

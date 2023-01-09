@@ -1,0 +1,280 @@
+[33mcommit 9c5e4578c4c4702d38e5f4dc6bf2f957f2d13cef[m[33m ([m[1;36mHEAD -> [m[1;32mfront[m[33m, [m[1;31morigin/dev[m[33m)[m
+Author: hyunjun Yang <yhj0439@nate.com>
+Date:   Wed Dec 7 20:26:21 2022 +0900
+
+     layout 변경 및 partyJoin post 요청시 전달하는 값 확인
+
+[33mcommit 21d17f251ccaa7522987521ca5ec011743e28976[m[33m ([m[1;32mmaster[m[33m)[m
+Author: hyunjun Yang <yhj0439@nate.com>
+Date:   Wed Dec 7 00:14:35 2022 +0900
+
+     merge 확인
+
+[33mcommit 2e7fa5f26d13e6e9c07a2c6192570cefbfbe9ff5[m
+Author: hyunjun Yang <yhj0439@nate.com>
+Date:   Tue Dec 6 18:13:31 2022 +0900
+
+     server app.js 파일 변경
+
+[33mcommit 266bfadfe54906185e0f01f584c789a22fc67c29[m
+Author: hyunjun Yang <yhj0439@nate.com>
+Date:   Tue Dec 6 13:30:15 2022 +0900
+
+     test 코드 수정사항: PartyJoin.js 파일 내 주석삭제
+
+[33mcommit b02987282bbea3dfa64c7a68424b47566a11eb1e[m
+Merge: 3a5d390 85cc9cf
+Author: hyunjun Yang <yhj0439@nate.com>
+Date:   Tue Dec 6 00:03:16 2022 +0900
+
+    Merge branch 'master' of https://github.com/JadeHyun/jeju-edu into front
+
+[33mcommit 3a5d390102f615fa760b0f15c0365a91978cdd56[m[33m ([m[1;31morigin/front[m[33m)[m
+Author: hyunjun Yang <yhj0439@nate.com>
+Date:   Mon Dec 5 23:59:07 2022 +0900
+
+     test
+
+[33mcommit 85cc9cfb8837dc6901df4626ff5a3d18bd72a574[m
+Merge: 1c1e771 6e94b12
+Author: DHAPARK <pdh4182@gmail.com>
+Date:   Mon Dec 5 23:52:26 2022 +0900
+
+    Merge branch 'back'
+
+[33mcommit 1c1e7719a49a977dd37998c4285b860bb0117e16[m
+Merge: aaf26e8 03edf90
+Author: DHPARK <37052379+DHAPARK@users.noreply.github.com>
+Date:   Mon Dec 5 23:09:57 2022 +0900
+
+    Merge pull request #21 from chucoding/master
+    
+    footer 수정
+    확인
+
+[33mcommit 6e94b12a862ce7962e2a68248a2b96e72a883f6e[m
+Merge: 7a24016 e06457d
+Author: DHAPARK <pdh4182@gmail.com>
+Date:   Mon Dec 5 23:04:34 2022 +0900
+
+    최신화
+
+[33mcommit 03edf900d113eeed2aeb3f6c8e5d5886a85b9199[m
+Merge: b74c35b aaf26e8
+Author: 외계공룡 <56211193+chucoding@users.noreply.github.com>
+Date:   Mon Dec 5 01:43:09 2022 +0900
+
+    Merge branch 'JadeHyun:master' into master
+
+[33mcommit b74c35b9cf3d81dfa0c81ae70763c294c4a0eb5f[m
+Author: chucoding <chucoding@gmail.com>
+Date:   Mon Dec 5 01:41:10 2022 +0900
+
+    footer 수정
+
+[33mcommit aaf26e8747c7d7b8602f1672a13b2b0f6d7aaef6[m
+Merge: 38c4514 0d4523b
+Author: Hyunjun <96432772+JadeHyun@users.noreply.github.com>
+Date:   Sun Dec 4 17:50:57 2022 +0900
+
+    Merge pull request #19 from chucoding/master
+    
+    스터디 상세페이지
+
+[33mcommit 0d4523b71b37390d2ce625f83e74a80103b6b028[m
+Author: chucoding <chucoding@gmail.com>
+Date:   Sun Dec 4 17:49:06 2022 +0900
+
+    footer
+
+[33mcommit 60f0cf176af66898706c146ba7bc36fdfa13c692[m
+Merge: 19d4690 1561714
+Author: chucoding <chucoding@gmail.com>
+Date:   Sat Dec 3 17:40:19 2022 +0900
+
+    Merge branch 'front' of https://github.com/JadeHyun/jeju-edu
+
+[33mcommit 19d4690d71359083e526afabf042dce0827095ce[m
+Merge: e3ad340 38c4514
+Author: chucoding <chucoding@gmail.com>
+Date:   Sat Dec 3 17:39:03 2022 +0900
+
+    Merge https://github.com/JadeHyun/jeju-edu
+
+[33mcommit 15617145ef88be8dce78f66c11f60c3f7a7e9f83[m
+Author: hyunjun Yang <yhj0439@nate.com>
+Date:   Sat Dec 3 17:02:26 2022 +0900
+
+     partyJoin post 요청 확인 필요
+
+[33mcommit 7ed7988c95078a6ed0c209c82f70deab3f5c71a7[m
+Merge: a0f889e 38c4514
+Author: hyunjun Yang <yhj0439@nate.com>
+Date:   Sat Dec 3 16:03:11 2022 +0900
+
+     불필요한 코드 삭제
+
+[33mcommit 38c451402f4fa3c1b6c94b610d013adcbd4af102[m
+Author: hyunjun Yang <yhj0439@nate.com>
+Date:   Sat Dec 3 15:52:40 2022 +0900
+
+    goorm 제거
+
+[33mcommit 167e86f609f4bd974c0e6a30a39fa479a550b5eb[m
+Author: hyunjun Yang <yhj0439@nate.com>
+Date:   Sat Dec 3 15:48:38 2022 +0900
+
+    goorm 제거
+
+[33mcommit e3ad34099359e81379807b25447d979fe4cb04dd[m
+Author: chucoding <chucoding@gmail.com>
+Date:   Sat Dec 3 14:24:39 2022 +0900
+
+    remove viewDetail
+
+[33mcommit f8120436a4a9ec4d808e9ac0db0fcb5b5c320eee[m
+Author: chucoding <chucoding@gmail.com>
+Date:   Sat Dec 3 14:19:01 2022 +0900
+
+    Merge branch 'master' of https://github.com/chucoding/jenfra
+
+[33mcommit c1e3c717718f47ab144b58ab82c2620e57886ef1[m
+Merge: c24e87a 7a24016
+Author: chucoding <chucoding@gmail.com>
+Date:   Sat Dec 3 13:26:40 2022 +0900
+
+    Merge branch 'back' of https://github.com/JadeHyun/jeju-edu
+
+[33mcommit c24e87abdd01c29297bc7ec763d8f06f4fe3d477[m
+Merge: e06457d 9db75a4
+Author: DHPARK <37052379+DHAPARK@users.noreply.github.com>
+Date:   Sat Dec 3 06:36:15 2022 +0900
+
+    Merge pull request #18 from chucoding/master
+    
+    스터디 목록 나오게 수정
+    확인했습니다
+
+[33mcommit 7a24016b7e706d2177903bf652b32d7b60bb6d63[m[33m ([m[1;31morigin/back[m[33m)[m
+Author: DHAPARK <pdh4182@gmail.com>
+Date:   Fri Dec 2 03:46:14 2022 +0900
+
+    viewDetail , closeStudy 추가
+
+[33mcommit 485aebd6d0d0298c4a600c53808555660a7eb3a5[m
+Author: DHAPARK <pdh4182@gmail.com>
+Date:   Fri Dec 2 02:50:39 2022 +0900
+
+    gitignore정리
+
+[33mcommit 9db75a4d3aef3d3c7bfe61ab7a5b31c8579b14ae[m
+Author: chucoding <chucoding@gmail.com>
+Date:   Fri Dec 2 01:30:35 2022 +0900
+
+    my page refactoring
+
+[33mcommit 09fbc6d5df9f2cb130c0e469e6047f01c969e57c[m
+Author: chucoding <chucoding@gmail.com>
+Date:   Fri Dec 2 00:39:34 2022 +0900
+
+    solve merge conflict
+
+[33mcommit d0d75e5c636af35939301f7de7172b87147de195[m
+Author: chucoding <chucoding@gmail.com>
+Date:   Fri Dec 2 00:35:04 2022 +0900
+
+    로그아웃 추가
+
+[33mcommit 65154a95ca9aff3571eccfb559ac7b7d2185bf72[m
+Merge: 3db63a0 d66ac25
+Author: chucoding <chucoding@gmail.com>
+Date:   Fri Dec 2 00:34:02 2022 +0900
+
+    Merge branch 'back' of https://github.com/JadeHyun/jeju-edu
+
+[33mcommit d66ac2520526866ae58ee90a103887a35d40a757[m
+Author: DHAPARK <pdh4182@gmail.com>
+Date:   Fri Dec 2 00:08:05 2022 +0900
+
+    env 환경변수 세팅
+
+[33mcommit 3db63a0e14a987c7c090591942eeb408e94011a3[m
+Merge: e652320 6b63fbb
+Author: chucoding <chucoding@gmail.com>
+Date:   Fri Dec 2 00:01:45 2022 +0900
+
+    Merge branch 'back' of https://github.com/JadeHyun/jeju-edu
+
+[33mcommit 6b63fbb552e7533eee64c1958cf5781749d3dca4[m
+Author: DHAPARK <pdh4182@gmail.com>
+Date:   Thu Dec 1 23:59:15 2022 +0900
+
+    로그아웃 추가
+
+[33mcommit e6523209e6365f20b3845c244bf6d9f0771219ef[m
+Merge: 60de0fa df0419c
+Author: chucoding <chucoding@gmail.com>
+Date:   Thu Dec 1 22:51:49 2022 +0900
+
+    Merge branch 'back' of https://github.com/JadeHyun/jeju-edu
+
+[33mcommit a0f889ed61b7405ef684c3bec64ca93bd25b238e[m
+Author: hyunjun Yang <yhj0439@nate.com>
+Date:   Thu Dec 1 15:07:09 2022 +0900
+
+     dev pull finish
+
+[33mcommit ad0a095666b03732fef89e4945c42bb46a7fdc08[m
+Merge: 62ae91a 7695667
+Author: hyunjun Yang <yhj0439@nate.com>
+Date:   Thu Dec 1 14:55:34 2022 +0900
+
+    Merge branch 'dev' of https://github.com/JadeHyun/jeju-edu into front
+
+[33mcommit 62ae91aa177987211629b9accc713cef05ac7106[m
+Merge: 35605ad b9a8895
+Author: hyunjun Yang <yhj0439@nate.com>
+Date:   Thu Dec 1 14:38:29 2022 +0900
+
+     test change
+
+[33mcommit df0419c715f42ecfc921d1f559d6147d180a3087[m
+Author: DHAPARK <pdh4182@gmail.com>
+Date:   Thu Dec 1 06:47:58 2022 +0900
+
+    joinStudy_스터디 참여하기 구현 완료
+
+[33mcommit 9b2d98c08c19c9294ede317f0610ad7ce8380ceb[m
+Author: DHAPARK <pdh4182@gmail.com>
+Date:   Thu Dec 1 03:55:06 2022 +0900
+
+    sudo x
+
+[33mcommit bdeaf40d50c9439c742b3bcbf1c077322ded1849[m
+Author: DHAPARK <pdh4182@gmail.com>
+Date:   Thu Dec 1 03:52:57 2022 +0900
+
+    sudo x
+
+[33mcommit 39e73dd82a56159ca53752209c72ccf9397ee87b[m
+Author: DHAPARK <pdh4182@gmail.com>
+Date:   Thu Dec 1 03:48:20 2022 +0900
+
+    getStudyListMine , getStudyListNotMine , openStudy , nodemon 해결완료
+
+[33mcommit 60de0faa31db9c2f0f0d81a2fafea35ae4f390c8[m
+Author: chucoding <chucoding@gmail.com>
+Date:   Thu Dec 1 01:29:56 2022 +0900
+
+    design study card
+
+[33mcommit 8fa3870a5493424e70c17cef95aa3b58099ea6d9[m
+Author: chucoding <chucoding@gmail.com>
+Date:   Wed Nov 30 23:40:08 2022 +0900
+
+    show study list
+
+[33mcommit a9f7f7d04d0b09b8d973731a73d7b2d2287ddd07[m
+Merge: e06457d 5766eca
+Author: chucoding <chucoding@gmail.com>
+Date:   Wed Nov 30 22:35:51

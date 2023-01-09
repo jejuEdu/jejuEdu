@@ -1,0 +1,154 @@
+.router-wrapper {
+  overflow: hidden;
+  /* margin: 0 24px; */
+}
+
+.forward-from-right-enter main {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.forward-from-right-enter-active main {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 400ms;
+}
+
+.forward-from-right-exit main {
+  opacity: 1;
+}
+.forward-from-right-exit-active main {
+  opacity: 0.3;
+  transition: all 400ms;
+}
+
+.back-to-right-enter main {
+  opacity: 0.3;
+}
+.back-to-right-enter-active main {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 400ms;
+}
+
+.back-to-right-exit main {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.back-to-right-exit-active main {
+  opacity: 0;
+  transform: translate(100%);
+  transition: all 400ms;
+}
+
+.forward-from-left-enter main {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.forward-from-left-enter-active main {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 400ms;
+}
+
+.forward-from-left-exit main {
+  opacity: 1;
+}
+.forward-from-left-exit-active main {
+  opacity: 0.3;
+  transition: all 400ms;
+}
+
+.back-to-left-enter main {
+  opacity: 0.3;
+}
+.back-to-left-enter-active main {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 400ms;
+}
+
+.back-to-left-exit main {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.back-to-left-exit-active main {
+  opacity: 0;
+  transform: translate(-100%);
+  transition: all 400ms;
+}
+
+.forward-from-fade-enter main {
+  opacity: 0;
+}
+
+.forward-from-fade-enter-active main {
+  opacity: 1;
+  transition: all 400ms;
+}
+
+.forward-from-fade-exit main {
+  opacity: 1;
+}
+.forward-from-fade-exit-active main {
+  opacity: 0.3;
+  transition: all 400ms;
+}
+
+.back-to-fade-enter main {
+  opacity: 0.3;
+}
+.back-to-fade-enter-active main {
+  opacity: 1;
+  transition: all 400ms;
+}
+
+.back-to-fade-exit main {
+  opacity: 1;
+}
+
+.back-to-fade-exit-active main {
+  opacity: 0;
+  transition: all 400ms;
+}
+
+.forward-from-bottom-enter main {
+  opacity: 1;
+  transform: translateY(100%);
+}
+
+.forward-from-bottom-enter-active main {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 400ms;
+}
+
+.forward-from-bottom-exit main {
+  opacity: 1;
+}
+.forward-from-bottom-exit-active main {
+  opacity: 1;
+  transition: all 400ms;
+}
+
+.back-to-bottom-enter main {
+  opacity: 1;
+}
+.back-to-bottom-enter-active main {
+  opacity: 1;
+  transition: all 400ms;
+}
+
+.back-to-bottom-exit main {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.back-to-bottom-exit-active main {
+  opacity: 1;
+  transform: translateY(100%);
+  transition: all 400ms;
+}
