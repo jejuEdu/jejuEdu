@@ -1,0 +1,20 @@
+# Root
+node_modules
+package-lock.json
+package.json
+Dockerfile
+.env
+.ist
+.README.md
+
+# Client
+/client/public
+/client/build
+/client/node_modules
+/client/package.json
+/client/src/img
+/client/test
+/client/README.md
+
+# Server
+/node_modules
