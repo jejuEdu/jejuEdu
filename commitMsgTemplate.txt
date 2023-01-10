@@ -1,0 +1,59 @@
+JenFra commit message template
+주의 : < > 는 따라적지 말아주세요
+
+< 타입 > : < 제목 > 형식으로 제목을 작성  ( 필수 )
+
+< 본문내용 > ( 선택 )
+
+< footer > ( 선택 )
+
+
+
+< 타입 종류 >
+feature : 새로운 기능 추가
+fix : 버그 수정
+docs : 문서 수정
+test : 테스트 코드 추가
+refactor : 코드 리팩토링
+style : 코드 의미와 무관한 코드 변경사항
+chore : 빌드 부분 or 패키지 매니저 코드 수정
+design : UI 디자인 변경
+rename : 파일 수정 및 이동
+remove : 파일 삭제
+
+
+-----------commit message 작성 예시-----------
+참조 블로그 https://haesoo9410.tistory.com/300
+
+feature : 서버 xx개발 API 하나 추가 , api-docs 업데이트 완료
+
+xx의 xx에 원래 ( 파라미터1 , 파라미터2 )를 받는 API였는데 ,
+파라미터 넘길필요 없이 그냥 API요청만 하시면 되게 수정되었습니다
+
+Resloves : #123
+See also : #456 , #789
+
+
+------------feature 브랜치 네이밍 규칙------------
+참조 블로그 https://velog.io/@kim-jaemin420/Git-branch-naming#:~:text=branch%20%EB%84%A4%EC%9D%B4%EB%B0%8D%20%EA%B7%9C%EC%B9%99%201%20%EC%96%B4%EB%96%A4%20%EC%9D%B4%EB%A6%84%EB%8F%84%20%EA%B0%80%EB%8A%A5%ED%95%98%EB%8B%A4.%20%EB%8B%A8%2C,%7Bfeature-name%7D%20%EC%9D%B4%EC%8A%88%EC%B6%94%EC%A0%81%EC%9D%84%20%EC%82%AC%EC%9A%A9%ED%95%9C%EB%8B%A4%EB%A9%B4%20%EC%9D%B4%EC%99%80%20%EA%B0%99%EC%9D%80%20%ED%98%95%EC%8B%9D%EC%9D%84%20%EB%94%B0%EB%A5%B8%EB%8B%A4.%20
+
+1. feature/기능요약
+	git checkout -b feature/login develop
+2. feature/{issue-number}-{feature-name}
+	git checkout -b feature/136-login develop
+
+------------release 브랜치 네이밍 규칙------------
+1. release-RB_...
+2. release-..
+3. release/...
+
+ex )
+release-1.2.2
+
+------------hotfix 브랜치 네이밍 규칙------------
+1. hotfix-1.2.3 
+(앞선 release 버전보다 버전업이 되어야함
+이유는 hotfix 브랜치는 "배포된 버전"을 가지고 수정하는 경우이기때문에
+배포된 버전보다 1발짝 업그레이드 된 버전으로 commit message를 적어줘야함)
+
+
