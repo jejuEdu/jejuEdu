@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Input, Button } from '../../components/form';
 import styled from 'styled-components';
 
-import CommonModal from '../../components/modals/CommonModal';
+import CommonModal from '../../components/modules/Modal';
 import axios from 'axios';
 import LayoutDetailPage from '../../layouts/LayoutDetailPage';
 import iconWarning from '../../img/icon-warning.png';
