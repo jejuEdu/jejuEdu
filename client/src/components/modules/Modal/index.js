@@ -76,8 +76,8 @@ const ModalContainer = styled.div`
   border-radius: 20px;
   z-index: 1000;
   overflow: hidden;
-  ont-family: 'NanumSquare Neo';
-  ont-family: 'NanumSquare Neo';
+  font-family: 'NanumSquare Neo';
+  font-family: 'NanumSquare Neo';
   font-style: normal;
   font-weight: 400;
   font-size: 16px;

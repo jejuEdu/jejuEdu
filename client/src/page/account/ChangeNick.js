@@ -9,7 +9,7 @@ import styled from 'styled-components';
 
 import { Input, Button } from '../../components/form';
 import LayoutDetailPage from '../../layouts/LayoutDetailPage';
-import CommonModal from '../../components/modals/CommonModal';
+import CommonModal from '../../components/modules/Modal';
 
 import iconSuccess from '../../img/icon-success.png';
 

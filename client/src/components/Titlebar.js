@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import styled, { keyframes } from 'styled-components'; // 1.컴포넌트 추가
 import { logout } from './func';
-import CommonModal from './modals/CommonModal';
+import CommonModal from './modules/Modal';
 // 2.이미지 불러옴
 import fir from '../img/logo_white.png';
 import backbtn from '../img/icon-back.svg';
