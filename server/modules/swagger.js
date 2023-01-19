@@ -8,7 +8,7 @@ const options = {
       version: '1.0.0',
       description: 'Janfra API with express',
     },
-    host: 'localhost:3000',
+    host: 'localhost:4000',
     basePath: '/',
     tags: [
       {
@@ -719,9 +719,69 @@ const options = {
             500: {
               description:
                 '회원 탈퇴 중 서버 내의 알 수 없는 에러가 발생하였을 때 코드 500이 리턴됩니다',
-
               schema: {
                 $ref: '#/definitions/apiAuthWithdrawal_ResponseForm_Failed500',
+              },
+            },
+          },
+        },
+      },
+      '/api/survey/count': {
+        get: {
+          tags: ['파이어베이스에서 설문 참여자 수를 카운트하는 API'],
+          summary: '파이어베이스에서 설문 참여자 수를 카운트하는 API 입니다',
+          responses: {
+            200: {
+              description:
+                '파이어베이스에서 설문 참여자 수를 성공적으로 카운트했다면 코드 200을 리턴합니다',
+              schema: {
+                $ref: '#/definitions/apiSurveyCount_ResponseForm_Success200',
+              },
+            },
+            202: {
+              description:
+                '파이어베이스에서 사용 가능한 데이터가 없으면 코드 202를 리턴합니다',
+              schema: {
+                $ref: '#/definitions/apiSurveyCount_ResponseForm_Failed202',
+              },
+            },
+            500: {
+              description:
+                '파이어베이스에서 설문 참여자 수를 카운트하는 중 서버 내의 알 수 없는 에러가 발생하였을 때 코드 500이 리턴됩니다',
+              schema: {
+                $ref: '#/definitions/apiSurveyCount_ResponseForm_Failed500',
+              },
+            },
+          },
+        },
+      },
+      '/api/survey/submit': {
+        post: {
+          tags: ['파이어베이스에 설문 참여자의 휴대폰 번호와 이메일을 저장하는 API'],
+          summary: '파이어베이스에 설문 참여자의 휴대폰 번호와 이메일을 저장하는 API 입니다',
+          parameters: [
+            {
+              in: 'body',
+              name: 'body',
+              description: '사용자의 휴대폰 번호와 이메일을 넘겨주세요',
+              schema: {
+                $ref: '#/definitions/apiSurveySubmitRequestForm',
+              },
+            },
+          ],
+          responses: {
+            200: {
+              description:
+                '파이어베이스에 휴대폰 번호와 이메일을 성공적으로 저장했다면 코드 200을 리턴합니다',
+              schema: {
+                $ref: '#/definitions/apiSurveySubmit_ResponseForm_Success200',
+              },
+            },
+            500: {
+              description:
+                '파이어베이스에 휴대폰 번호와 이메일을 저장하는 중 서버 내의 알 수 없는 에러가 발생하였을 때 코드 500이 리턴됩니다',
+              schema: {
+                $ref: '#/definitions/apiSurveySubmit_ResponseForm_Failed500',
               },
             },
           },
@@ -2221,6 +2281,78 @@ const options = {
           message: {
             type: 'string',
             description: `실패하면 회원 탈퇴 중 서버 내 알 수 없는 에러발생 이란 메세지가 리턴된다`,
+          },
+        },
+      },
+      apiSurveyCount_ResponseForm_Success200: {
+        properties: {
+          code: {
+            type: 'integer',
+            description: '성공하면 코드 200이 리턴된다',
+          },
+          message: {
+            type: 'string',
+            description: `성공하면 현재 참여자 수를 성공적으로 가져왔습니다 라는 메세지가 리턴된다`,
+          },
+        },
+      },
+      apiSurveyCount_ResponseForm_Failed202: {
+        properties: {
+          code: {
+            type: 'integer',
+            description: '실패하면 코드 202가 리턴된다',
+          },
+          message: {
+            type: 'string',
+            description: `실패하면 사용 가능한 데이터가 없습니다 라는 메세지가 리턴된다`,
+          },
+        },
+      },
+      apiSurveyCount_ResponseForm_Failed500: {
+        properties: {
+          code: {
+            type: 'integer',
+            description: '실패하면 코드 500이 리턴된다',
+          },
+          message: {
+            type: 'string',
+            description: `실패하면 파이어베이스에서 설문 참여자 수를 카운트하는 중 서버 내 알 수 없는 에러발생 이란 메세지가 리턴된다`,
+          },
+        },
+      },
+      apiSurveySubmitRequestForm: {
+        properties: {
+          phone: {
+            type: 'string',
+            description: '사용자 휴대폰 번호',
+          },
+          email: {
+            type: 'string',
+            description: '사용자 이메일',
+          },
+        },
+      },
+      apiSurveySubmit_ResponseForm_Success200: {
+        properties: {
+          code: {
+            type: 'integer',
+            description: '성공하면 코드 200이 리턴된다',
+          },
+          message: {
+            type: 'string',
+            description: `성공하면 파이어베이스에 데이터가 성공적으로 저장되었습니다 라는 메세지가 리턴된다`,
+          },
+        },
+      },
+      apiSurveySubmit_ResponseForm_Failed500: {
+        properties: {
+          code: {
+            type: 'integer',
+            description: '실패하면 코드 500이 리턴된다',
+          },
+          message: {
+            type: 'string',
+            description: `파이어베이스에 휴대폰 번호와 이메일을 저장하는 중 서버 내 알 수 없는 에러발생 이란 메세지가 리턴된다`,
           },
         },
       },

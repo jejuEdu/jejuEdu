@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 dotenv.config({ path: '../.env' });
 //dotenv.config({ path: "../../configs/.env" });
 
+const surveyRouter = require('./routes/survey');
 const pageRouter = require('./routes/page');
 const authRouter = require('./routes/auth');
 const apiRouter = require('./routes/api');
@@ -59,6 +60,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/', pageRouter);
 app.use('/api/auth', authRouter);
 app.use('/api', apiRouter);
+app.use('/api/survey', surveyRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

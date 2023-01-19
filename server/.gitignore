@@ -3,6 +3,8 @@
 # dependencies
 /node_modules
 
+# firebase config
+/firebase/*.json
 
 # misc
 *.DS_Store
