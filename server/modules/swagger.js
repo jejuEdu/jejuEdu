@@ -726,6 +726,38 @@ const options = {
           },
         },
       },
+      '/api/survey/question': {
+        post: {
+          tags: ['파이어베이스에 각 설문 데이터의 카운트 수를 저장하는 API'],
+          summary: '파이어베이스에 각 설문 데이터의 카운트 수를 저장하는 API 입니다',
+          parameters: [
+            {
+              in: 'body',
+              name: 'body',
+              description: '설문조사 문항번호와 사용자가 선택한 답변 번호를 넘겨주세요',
+              schema: {
+                $ref: '#/definitions/apiSurveyQuestionRequestForm',
+              },
+            },
+          ],
+          responses: {
+            200: {
+              description:
+                '파이어베이스에 설문 데이터 카운트 수가 성공적으로 저장되었다면 코드 200을 리턴합니다',
+              schema: {
+                $ref: '#/definitions/apiSurveyQuestion_ResponseForm_Success200',
+              },
+            },
+            500: {
+              description:
+                '파이어베이스에 설문 데이터 카운트 수를 저장하는 중 서버 내의 알 수 없는 에러가 발생하였을 때 코드 500이 리턴됩니다',
+              schema: {
+                $ref: '#/definitions/apiSurveyQuestion_ResponseForm_Failed500',
+              },
+            },
+          },
+        },
+      },
       '/api/survey/count': {
         get: {
           tags: ['파이어베이스에서 설문 참여자 수를 카운트하는 API'],
@@ -2353,6 +2385,42 @@ const options = {
           message: {
             type: 'string',
             description: `파이어베이스에 휴대폰 번호와 이메일을 저장하는 중 서버 내 알 수 없는 에러발생 이란 메세지가 리턴된다`,
+          },
+        },
+      },
+      apiSurveyQuestionRequestForm: {
+        properties: {
+          questionNum: {
+            type: 'string',
+            description: '설문조사 문항번호',
+          },
+          itemNum: {
+            type: 'string',
+            description: '사용자가 선택한 답변 번호',
+          },
+        },
+      },
+      apiSurveyQuestion_ResponseForm_Success200: {
+        properties: {
+          code: {
+            type: 'integer',
+            description: '성공하면 코드 200이 리턴된다',
+          },
+          message: {
+            type: 'string',
+            description: `성공하면 파이어베이스에 설문 데이터 카운트 수가 성공적으로 저장되었습니다 라는 메세지가 리턴된다`,
+          },
+        },
+      },
+      apiSurveyQuestion_ResponseForm_Failed500: {
+        properties: {
+          code: {
+            type: 'integer',
+            description: '실패하면 코드 500이 리턴된다',
+          },
+          message: {
+            type: 'string',
+            description: `파이어베이스에 설문 데이터 카운트 수를 저장하는 중 서버 내 알 수 없는 에러발생 이란 메세지가 리턴된다`,
           },
         },
       },
