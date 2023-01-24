@@ -726,38 +726,6 @@ const options = {
           },
         },
       },
-      '/api/survey/question': {
-        post: {
-          tags: ['파이어베이스에 각 설문 데이터의 카운트 수를 저장하는 API'],
-          summary: '파이어베이스에 각 설문 데이터의 카운트 수를 저장하는 API 입니다',
-          parameters: [
-            {
-              in: 'body',
-              name: 'body',
-              description: '설문조사 문항번호와 사용자가 선택한 답변 번호를 넘겨주세요',
-              schema: {
-                $ref: '#/definitions/apiSurveyQuestionRequestForm',
-              },
-            },
-          ],
-          responses: {
-            200: {
-              description:
-                '파이어베이스에 설문 데이터 카운트 수가 성공적으로 저장되었다면 코드 200을 리턴합니다',
-              schema: {
-                $ref: '#/definitions/apiSurveyQuestion_ResponseForm_Success200',
-              },
-            },
-            500: {
-              description:
-                '파이어베이스에 설문 데이터 카운트 수를 저장하는 중 서버 내의 알 수 없는 에러가 발생하였을 때 코드 500이 리턴됩니다',
-              schema: {
-                $ref: '#/definitions/apiSurveyQuestion_ResponseForm_Failed500',
-              },
-            },
-          },
-        },
-      },
       '/api/survey/count': {
         get: {
           tags: ['파이어베이스에서 설문 참여자 수를 카운트하는 API'],
@@ -771,8 +739,7 @@ const options = {
               },
             },
             202: {
-              description:
-                '파이어베이스에서 사용 가능한 데이터가 없으면 코드 202를 리턴합니다',
+              description: '파이어베이스에서 사용 가능한 데이터가 없으면 코드 202를 리턴합니다',
               schema: {
                 $ref: '#/definitions/apiSurveyCount_ResponseForm_Failed202',
               },
@@ -789,13 +756,17 @@ const options = {
       },
       '/api/survey/submit': {
         post: {
-          tags: ['파이어베이스에 설문 참여자의 휴대폰 번호와 이메일을 저장하는 API'],
-          summary: '파이어베이스에 설문 참여자의 휴대폰 번호와 이메일을 저장하는 API 입니다',
+          tags: [
+            '파이어베이스에 설문 참여자의 설문 데이터를 저장하고 총 설문 집계에 이를 반영하여 저장하는 API',
+          ],
+          summary:
+            '파이어베이스에 설문 참여자의 설문 데이터를 저장하고 총 설문 집계에 이를 반영하여 저장하는 API 입니다',
           parameters: [
             {
               in: 'body',
               name: 'body',
-              description: '사용자의 휴대폰 번호와 이메일을 넘겨주세요',
+              description:
+                '사용자가 완료한 설문의 결과, 사용자의 주소, 사용자의 휴대폰 번호를 넘겨주세요\n특히나 surverResList는 [1,3,2,4,1,2,1]과 같이 client가 완료한 설문의 각 페이지마다 선택한 항목번호를 하나의 배열로\n만들어 넘겨주세요 설문은 총7페이지이니 index크기는 7일것이고,\n1번설문에 1번문항을, 2번설문에 3번문항을 선택하면 [1,3...]과 같습니다',
               schema: {
                 $ref: '#/definitions/apiSurveySubmitRequestForm',
               },
@@ -804,9 +775,16 @@ const options = {
           responses: {
             200: {
               description:
-                '파이어베이스에 휴대폰 번호와 이메일을 성공적으로 저장했다면 코드 200을 리턴합니다',
+                '파이어베이스에 설문참여자의 설문 데이터와 설문 집계를 성공적으로 반영하고 저장했다면 코드 200을 리턴합니다',
               schema: {
                 $ref: '#/definitions/apiSurveySubmit_ResponseForm_Success200',
+              },
+            },
+            400: {
+              description:
+                '이미 설문을 완료한 휴대폰번호로 다시 설문을 submit하게될시 중복코드로 400이 가게 됩니다',
+              schema: {
+                $ref: '#/definitions/apiSurveySubmit_ResponseForm_Failed400',
               },
             },
             500: {
@@ -2352,15 +2330,32 @@ const options = {
           },
         },
       },
+
       apiSurveySubmitRequestForm: {
         properties: {
-          phone: {
-            type: 'string',
-            description: '사용자 휴대폰 번호',
-          },
-          email: {
-            type: 'string',
-            description: '사용자 이메일',
+          surveyInfo: {
+            type: 'object',
+            description:
+              'client의 설문조사결과물, 주소, 휴대폰번호를 하나의 json타입으로 보내주세요 ',
+            properties: {
+              surveyResList: {
+                type: 'array',
+                items: {
+                  type: 'integer',
+                  description: '내부 데이터들은 정수값으로 주시면 좋습니다',
+                },
+                description:
+                  '[1,2,1,2,2,1,3]과 같이 1~7번 설문페이지의 사용자가 선택한 각 선택지의 순번을 하나의 배열로 합쳐 보내주세요',
+              },
+              address: {
+                type: 'string',
+                description: '사용자가 기입한 거주지 입니다',
+              },
+              phone: {
+                type: 'string',
+                description: '사용자가 기입한 휴대폰번호 입니다',
+              },
+            },
           },
         },
       },
@@ -2368,11 +2363,25 @@ const options = {
         properties: {
           code: {
             type: 'integer',
-            description: '성공하면 코드 200이 리턴된다',
+            description:
+              '파이어베이스에 설문 참여자의 설문데이터 저장, 총 집계 갱신이 성공하면 코드 200이 리턴된다',
           },
           message: {
             type: 'string',
-            description: `성공하면 파이어베이스에 데이터가 성공적으로 저장되었습니다 라는 메세지가 리턴된다`,
+            description: `파이어베이스에 설문 참여자의 설문데이터 저장, 총 집계 갱신이 완료되면 성공적으로 저장되었습니다 라는 메세지가 리턴된다`,
+          },
+        },
+      },
+      apiSurveySubmit_ResponseForm_Failed400: {
+        properties: {
+          code: {
+            type: 'integer',
+            description:
+              '파이어베이스에 설문 참여자의 설문데이터 저장, 총 집계 갱신중 중복 참여자임이 판정나면 코드 400이 리턴된다',
+          },
+          message: {
+            type: 'string',
+            description: `파이어베이스에 설문 참여자의 설문데이터 저장, 총 집계 갱신중 중복 참여자임이 판정나면 중복된 참여자라는 메세지가 리턴된다`,
           },
         },
       },
@@ -2380,47 +2389,12 @@ const options = {
         properties: {
           code: {
             type: 'integer',
-            description: '실패하면 코드 500이 리턴된다',
+            description:
+              '파이어베이스에 설문 참여자의 설문데이터를 저장하고 집계를 갱신하는중에 서버 내 알 수 없는 에러발생하면 코드 500이 리턴된다',
           },
           message: {
             type: 'string',
-            description: `파이어베이스에 휴대폰 번호와 이메일을 저장하는 중 서버 내 알 수 없는 에러발생 이란 메세지가 리턴된다`,
-          },
-        },
-      },
-      apiSurveyQuestionRequestForm: {
-        properties: {
-          questionNum: {
-            type: 'string',
-            description: '설문조사 문항번호',
-          },
-          itemNum: {
-            type: 'string',
-            description: '사용자가 선택한 답변 번호',
-          },
-        },
-      },
-      apiSurveyQuestion_ResponseForm_Success200: {
-        properties: {
-          code: {
-            type: 'integer',
-            description: '성공하면 코드 200이 리턴된다',
-          },
-          message: {
-            type: 'string',
-            description: `성공하면 파이어베이스에 설문 데이터 카운트 수가 성공적으로 저장되었습니다 라는 메세지가 리턴된다`,
-          },
-        },
-      },
-      apiSurveyQuestion_ResponseForm_Failed500: {
-        properties: {
-          code: {
-            type: 'integer',
-            description: '실패하면 코드 500이 리턴된다',
-          },
-          message: {
-            type: 'string',
-            description: `파이어베이스에 설문 데이터 카운트 수를 저장하는 중 서버 내 알 수 없는 에러발생 이란 메세지가 리턴된다`,
+            description: `파이어베이스에 설문 참여자의 설문데이터를 저장하고 집계를 갱신하는중에 에러가 나면 서버 내 알 수 없는 에러발생 이란 메세지가 리턴된다`,
           },
         },
       },

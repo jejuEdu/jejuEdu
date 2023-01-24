@@ -2,13 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const {
-    question,
     count,
     submit,
 } = require('../dao/survey/surveyModule');
-
-// 설문 데이터 db 에 저장
-router.post('/question', question);
 
 // 시작 페이지 (참여자 수 카운팅)
 router.get('/count', count);
