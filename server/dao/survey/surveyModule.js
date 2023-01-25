@@ -98,4 +98,108 @@ module.exports = {
       });
     }
   },
+
+  getTotalSurveyResult: async (req, res) => {
+    const eachSurveyItemsCnt = [7, 5, 4, 4, 2, 4, 4];
+    //1. 내가 선택한 데이터들을 전부 받아와야함
+
+    try {
+      const myPick = (await database.ref(`users/${req.body.phone}/surveyResList`).get()).val();
+
+      //2. 현재까지의 집계를 다 받아오되 , Count 내림차순으로 받아와야한다
+      var surVeyAr = [];
+      for (var i = 0; i < 7; i++) {
+        var temp = (
+          await database
+            .ref(`surVeyQuestion`)
+            .child(`${i}/Q${i + 1}/Q${i + 1}_List/`)
+            .get()
+        ).val();
+        var tempAr = [];
+        for (var k = 0; k < eachSurveyItemsCnt[i]; k++) {
+          tempAr.push(temp[k][`Q${i + 1}_${k + 1}`]);
+        }
+        surVeyAr.push(tempAr);
+      }
+      //이후 내 랭킹목록의 맨위에 내 선택지를 올리기 위한 surVeyFixedAr 변수
+      const surVeyFixedAr = JSON.parse(JSON.stringify(surVeyAr));
+
+      /**
+       * 이제 내가 선택한걸 맨 위로 올리기만하면됨
+       * 반복 도는김에 순위필드까지 추가하고
+       */
+      for (var i = 0; i < 7; i++) {
+        var temp = surVeyAr[i][0];
+        var title = surVeyFixedAr[i][myPick[i] - 1]['Title'];
+
+        for (var k = 0; k < eachSurveyItemsCnt[i]; k++) {
+          if (title === surVeyAr[i][k]['Title']) {
+            surVeyAr[i][k] = temp;
+            break;
+          }
+        }
+        surVeyAr[i][0] = surVeyFixedAr[i][myPick[i] - 1];
+      }
+
+      //아..리소스 낭비인것같은데..만들고나서 생각해볼까
+      /**
+       * surVeyAr 를
+       * 새 형태의 배열 { Count: 3, Title: '나만의 작은 취미 만들기' } 들만 쌓인 형태로 가공 완료
+       * 이는 2차원 배열로 아래에선 각 surVeyAr[][V] 인덱스마다 내부 배열을 정렬해서 새로운 배열로 할당해야함
+       */
+
+      for (var i = 0; i < 7; i++) {
+        for (var a = 2; a < eachSurveyItemsCnt[i]; a++) {
+          for (var b = 1; b < a; b++) {
+            if (surVeyAr[i][b]['Count'] < surVeyAr[i][a]['Count']) {
+              var temp = surVeyAr[i][a];
+              surVeyAr[i][a] = surVeyAr[i][b];
+              surVeyAr[i][b] = temp;
+            }
+          }
+        }
+      }
+
+      //순위 여기서 좀 쉽게 매겨볼까
+      for (var i = 0; i < 7; i++) {
+        var rank = 1;
+        for (var a = 1; a < eachSurveyItemsCnt[i]; a++) {
+          if (a == 1) {
+            if (surVeyAr[i][0]['Count'] > surVeyAr[i][a]['Count']) {
+              surVeyAr[i][0]['rank'] = rank++;
+              surVeyAr[i][a]['rank'] = rank;
+              continue;
+            } else {
+              surVeyAr[i][a]['rank'] = rank++;
+              surVeyAr[i][0]['rank'] = rank;
+              continue;
+            }
+          }
+          if (surVeyAr[i][0]['Count'] < surVeyAr[i][a]['Count']) {
+            surVeyAr[i][a]['rank'] = rank++;
+            surVeyAr[i][0]['rank'] = rank;
+            continue;
+          } else if (surVeyAr[i][0]['Count'] == surVeyAr[i][a]['Count']) {
+            surVeyAr[i][a]['rank'] = rank;
+            surVeyAr[i][0]['rank'] = rank;
+            continue;
+          }
+          surVeyAr[i][a]['rank'] = ++rank;
+        }
+      }
+
+      //다했다 이제 surVeyAr만 넘기면됨
+      return res.status(200).json({
+        code: 200,
+        message:
+          '성공적으로 설문의 총 집계를 추출해냈습니다 1순위는 집계의 count와 관계없이 무조건 내가 선택한 항목입니다',
+        surVeyAr: surVeyAr,
+      });
+    } catch (e) {
+      return res.status(404).json({
+        code: 404,
+        message: `설문의 총 집계를 추출하던중 없는 휴대폰 번호(설문에 참여하지 않은 고객)를 서버가 받아서 처리하지 못했습니다 ${e}`,
+      });
+    }
+  },
 };

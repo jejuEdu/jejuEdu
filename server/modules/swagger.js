@@ -797,6 +797,40 @@ const options = {
           },
         },
       },
+
+      '/api/survey/getTotalSurveyResult': {
+        post: {
+          tags: ['파이어베이스 내부 설문데이터의 총 집계를 가공해서 Front로 응답해주는 API'],
+          summary:
+            '파이어베이스 내부 설문데이터의 총 집계를 가공해서 Front로 응답해주는 API 입니다',
+          parameters: [
+            {
+              in: 'body',
+              name: 'body',
+              description: '사용자의 휴대폰 번호를 넘겨주세요',
+              schema: {
+                $ref: '#/definitions/apiGetTotalSurveyResultRequestForm',
+              },
+            },
+          ],
+          responses: {
+            200: {
+              description:
+                '파이어베이스 내부 설문데이터의 총 집계를 가공해서 Front로 응답하는데 성공했다면 코드 200을 리턴합니다\n2차원 배열을 리턴하며 Arr[ 각 문제페이지 ][ 각 문제페이지에 비치된 문항들 (Json객체형태) ] 입니다\n또한 각 문제페이지에 비치된 문항들이 { Count: 7, Title: 마땅한 사람을 찾기가 어렵다., rank: 2 } 이런 형태로 들어있습니다',
+              schema: {
+                $ref: '#/definitions/apiGetTotalSurveyResult_ResponseForm_Success200',
+              },
+            },
+            404: {
+              description:
+                '파이어베이스 내부 설문데이터의 총 집계를 가공해서 Front로 응답하는데 실패했다면 코드 404를 리턴합니다',
+              schema: {
+                $ref: '#/definitions/apiGetTotalSurveyResult_ResponseForm_Failed404',
+              },
+            },
+          },
+        },
+      },
     },
     definitions: {
       DBuserTable: {
@@ -2395,6 +2429,57 @@ const options = {
           message: {
             type: 'string',
             description: `파이어베이스에 설문 참여자의 설문데이터를 저장하고 집계를 갱신하는중에 에러가 나면 서버 내 알 수 없는 에러발생 이란 메세지가 리턴된다`,
+          },
+        },
+      },
+      apiGetTotalSurveyResultRequestForm: {
+        properties: {
+          phone: {
+            type: 'string',
+            description: '사용자가 설문에 참여할때 사용했던 휴대폰번호를 주세요!',
+          },
+        },
+      },
+
+      apiGetTotalSurveyResult_ResponseForm_Success200: {
+        properties: {
+          code: {
+            type: 'integer',
+            description:
+              '파이어베이스 내부 설문데이터의 총 집계를 가공해서 Front로 응답하는데 성공했다면 코드 200을 리턴합니다',
+          },
+          message: {
+            type: 'string',
+            description: `파이어베이스 내부 설문데이터의 총 집계를 가공해서 Front로 응답하는데 성공했다면 성공적으로 설문의 총 집계를 추출해냈습니다 1순위는 집계의 count와 관계없이 무조건 내가 선택한 항목입니다 라는 메세지가 리턴됩니다`,
+          },
+          surVeyAr: {
+            type: 'array',
+            items: {
+              type: 'array',
+              items: {
+                type: 'object',
+                description:
+                  '각 문제페이지에 비치된 문항들이 { Count: 7, Title: 마땅한 사람을 찾기가 어렵다., rank: 2 } 이런 형태로 들어있습니다',
+              },
+              description:
+                '2차원 배열을 리턴하며 Arr[ 각 문제페이지 ][ 각 문제페이지에 비치된 문항들 (Json객체형태) ] 입니다 또한 각 문제페이지에 비치된 문항들이 { Count: 7, Title: 마땅한 사람을 찾기가 어렵다., rank: 2 } 이런 형태로 들어있습니다',
+            },
+            description:
+              '2차원 배열을 리턴하며 Arr[ 각 문제페이지 ][ 각 문제페이지에 비치된 문항들 (Json객체형태) ] 입니다 또한 각 문제페이지에 비치된 문항들이 { Count: 7, Title: 마땅한 사람을 찾기가 어렵다., rank: 2 } 이런 형태로 들어있습니다',
+          },
+        },
+      },
+
+      apiGetTotalSurveyResult_ResponseForm_Failed404: {
+        properties: {
+          code: {
+            type: 'integer',
+            description:
+              '설문의 총 집계를 추출하던중 없는 휴대폰 번호(설문에 참여하지 않은 고객)를 서버가 받아서 처리하지 못하면 코드 404가 리턴됩니다',
+          },
+          message: {
+            type: 'string',
+            description: `설문의 총 집계를 추출하던중 없는 휴대폰 번호(설문에 참여하지 않은 고객)를 서버가 받아서 처리하지 못했습니다 라는 메세지가 리턴됩니다`,
           },
         },
       },
