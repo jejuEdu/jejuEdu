@@ -780,6 +780,13 @@ const options = {
                 $ref: '#/definitions/apiSurveySubmit_ResponseForm_Success200',
               },
             },
+            202: {
+              description:
+                '사용자가 입력한 휴대폰 번호가 휴대폰 번호의 형식에 맞지 않는 경우 코드 202를 리턴합니다',
+              schema: {
+                $ref: '#/definitions/apiSurveySubmit_ResponseForm_Failed202',
+              },
+            },
             400: {
               description:
                 '이미 설문을 완료한 휴대폰번호로 다시 설문을 submit하게될시 중복코드로 400이 가게 됩니다',
@@ -821,11 +828,32 @@ const options = {
                 $ref: '#/definitions/apiGetTotalSurveyResult_ResponseForm_Success200',
               },
             },
+            202: {
+              description:
+                '사용자가 입력한 휴대폰 번호가 휴대폰 번호의 형식에 맞지 않는 경우 코드 202를 리턴합니다',
+              schema: {
+                $ref: '#/definitions/apiGetTotalSurveyResult_ResponseForm_Failed202',
+              },
+            },
+            203: {
+              description:
+                '파이어베이스에 사용 가능한 데이터가 없는 경우 코드 203을 리턴합니다',
+              schema: {
+                $ref: '#/definitions/apiGetTotalSurveyResult_ResponseForm_Failed203',
+              },
+            },
             404: {
               description:
-                '파이어베이스 내부 설문데이터의 총 집계를 가공해서 Front로 응답하는데 실패했다면 코드 404를 리턴합니다',
+                '설문의 총 집계를 추출하던 중 없는 휴대폰 번호(설문에 참여하지 않은 고객)를 서버가 받아서 처리하지 못한 경우 코드 404를 리턴합니다',
               schema: {
                 $ref: '#/definitions/apiGetTotalSurveyResult_ResponseForm_Failed404',
+              },
+            },
+            500: {
+              description:
+                '설문의 총 집계를 추출하던 중 서버 내 알 수 없는 에러가 발생 하였을 때 코드 500이 리턴됩니다',
+              schema: {
+                $ref: '#/definitions/apiGetTotalSurveyResult_ResponseForm_Failed500',
               },
             },
           },
@@ -2406,6 +2434,19 @@ const options = {
           },
         },
       },
+      apiSurveySubmit_ResponseForm_Failed202: {
+        properties: {
+          code: {
+            type: 'integer',
+            description:
+              '사용자가 입력한 휴대폰 번호가 기존 휴대폰 번호 형식에 맞지 않다면 코드 202가 리턴된다',
+          },
+          message: {
+            type: 'string',
+            description: `사용자가 입력한 휴대폰 번호가 형식에 맞지 않습니다 라는 메세지가 리턴된다`,
+          },
+        },
+      },
       apiSurveySubmit_ResponseForm_Failed400: {
         properties: {
           code: {
@@ -2469,17 +2510,43 @@ const options = {
           },
         },
       },
+      apiGetTotalSurveyResult_ResponseForm_Failed202: {
+        properties: {
+          code: {
+            type: 'integer',
+            description:
+              '사용자가 입력한 휴대폰 번호가 기존 휴대폰 번호 형식에 맞지 않다면 코드 202가 리턴된다',
+          },
+          message: {
+            type: 'string',
+            description: `사용자가 입력한 휴대폰 번호가 형식에 맞지 않습니다 라는 메세지가 리턴된다`,
+          },
+        },
+      },
+      apiGetTotalSurveyResult_ResponseForm_Failed203: {
+        properties: {
+          code: {
+            type: 'integer',
+            description:
+              '파이어베이스에 사용 가능한 데이터가 없는 경우 코드 203이 리턴된다',
+          },
+          message: {
+            type: 'string',
+            description: `파이어베이스에 사용 가능한 데이터가 없습니다 라는 메세지가 리턴된다`,
+          },
+        },
+      },
 
       apiGetTotalSurveyResult_ResponseForm_Failed404: {
         properties: {
           code: {
             type: 'integer',
             description:
-              '설문의 총 집계를 추출하던중 없는 휴대폰 번호(설문에 참여하지 않은 고객)를 서버가 받아서 처리하지 못하면 코드 404가 리턴됩니다',
+              '설문의 총 집계를 추출하던중 없는 휴대폰 번호(설문에 참여하지 않은 고객)를 서버가 받아서 처리하지 못하면 코드 404가 리턴된다',
           },
           message: {
             type: 'string',
-            description: `설문의 총 집계를 추출하던중 없는 휴대폰 번호(설문에 참여하지 않은 고객)를 서버가 받아서 처리하지 못했습니다 라는 메세지가 리턴됩니다`,
+            description: `설문의 총 집계를 추출하던중 없는 휴대폰 번호(설문에 참여하지 않은 고객)를 서버가 받아서 처리하지 못했습니다 라는 메세지가 리턴된다`,
           },
         },
       },
