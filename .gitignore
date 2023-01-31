@@ -4,9 +4,6 @@
 /node_modules
 /nohup*
 
-# firebase config
-/server/firebase/*.json
-
 # phoneNumber crypto
 /server/crypto
 
