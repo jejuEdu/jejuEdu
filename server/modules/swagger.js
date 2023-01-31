@@ -787,6 +787,13 @@ const options = {
                 $ref: '#/definitions/apiSurveySubmit_ResponseForm_Failed202',
               },
             },
+            203: {
+              description:
+                '설문조사 결과 리스트에 비정상적인 문항 개수가 포함되어 있는 경우 코드 203을 리턴합니다',
+              schema: {
+                $ref: '#/definitions/apiSurveySubmit_ResponseForm_Failed203',
+              },
+            },
             400: {
               description:
                 '이미 설문을 완료한 휴대폰번호로 다시 설문을 submit하게될시 중복코드로 400이 가게 됩니다',
@@ -2444,6 +2451,19 @@ const options = {
           message: {
             type: 'string',
             description: `사용자가 입력한 휴대폰 번호가 형식에 맞지 않습니다 라는 메세지가 리턴된다`,
+          },
+        },
+      },
+      apiSurveySubmit_ResponseForm_Failed203: {
+        properties: {
+          code: {
+            type: 'integer',
+            description:
+              '설문조사 결과 리스트에 비정상적인 문항 개수가 포함되어 있다면 코드 203이 리턴된다',
+          },
+          message: {
+            type: 'string',
+            description: `설문조사 결과 리스트에 비정상적인 문항 개수가 포함되어 있습니다 라는 메세지가 리턴된다`,
           },
         },
       },

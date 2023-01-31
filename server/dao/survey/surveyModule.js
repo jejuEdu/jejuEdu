@@ -45,11 +45,22 @@ module.exports = {
        *      }
        * }
        * 이렇게 온다는 가정하에 작성하는 코드
-       * 휴대폰번호 암호화는 다 된 후에 진행해도 될듯..급한것부터
+       * 휴대폰번호 암호화는 다 된 후에 진행해도 될듯..급한것부터 >> 휴대폰 암호화 완료
        */
       const { surveyResList, address, phone } = req.body['surveyInfo'];
       //각 Q1 , Q2 , Q3 ...들의 설문 갯수
       const eachSurveyItemsCnt = [7, 5, 4, 4, 2, 4, 4];
+
+      // 각 문항의 설문 개수를 토대로 surveyResList 의 값이 정상적인 값인지 체크
+      const checkSurveyResList = (eachSurveyItemsCnt.length == surveyResList.length) &&
+                              eachSurveyItemsCnt.every((value, idx) => value >= surveyResList[idx]);
+
+      if (checkSurveyResList == false) {
+        return res.status(203).json({
+          code: 203,
+          message: `설문조사 결과 리스트에 비정상적인 문항 개수가 포함되어 있습니다.`
+        })
+      }
 
       //휴대폰번호 형식이 맞는지 체크
       const checkPhone = /(01[0])([1-9]{1}[0-9]{3})([0-9]{4})$/;
