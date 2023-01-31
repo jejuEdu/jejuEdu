@@ -8,7 +8,7 @@
 /server/firebase/*.json
 
 # phoneNumber crypto
-/crypto
+/server/crypto
 
 # misc
 .DS_Store
