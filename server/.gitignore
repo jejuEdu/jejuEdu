@@ -7,7 +7,7 @@
 /firebase/*.json
 
 # phoneNumber crypto
-/crypto
+/crypto/*
 
 # misc
 *.DS_Store
