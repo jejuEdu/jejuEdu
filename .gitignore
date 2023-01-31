@@ -7,6 +7,9 @@
 # firebase config
 /server/firebase/*.json
 
+# phoneNumber crypto
+/crypto
+
 # misc
 .DS_Store
 .env.local
