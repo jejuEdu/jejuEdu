@@ -1,6 +1,7 @@
 const database = require('../../firebase/config');
 const crypto = require('crypto');
 const { algorithm, key } = require('../../crypto/crypto');
+const eachSurveyItemsCnt = [7, 5, 4, 4, 2, 4, 4];
 
 module.exports = {
   count: async (req, res) => {
@@ -46,9 +47,9 @@ module.exports = {
        * 이렇게 온다는 가정하에 작성하는 코드
        * 휴대폰번호 암호화는 다 된 후에 진행해도 될듯..급한것부터 >> 휴대폰 암호화 완료
        */
+      const cipher = crypto.createCipher(algorithm, key);
       const { surveyResList, address, phone } = req.body['surveyInfo'];
       //각 Q1 , Q2 , Q3 ...들의 설문 갯수
-      const eachSurveyItemsCnt = [7, 5, 4, 4, 2, 4, 4];
 
       // surveyResList 가 설문의 문항 수를 벗어나지 않았는지 체크 (false >> 설문 결과 리스트 중 없는 문항에 대한 데이터 존재)
       const checkSurveyResList = eachSurveyItemsCnt.every(
@@ -81,7 +82,6 @@ module.exports = {
 
       //휴대폰번호 암호화
       // const key = crypto.scryptSync(phone, salt, 16); // phone, salt, byte 순
-      const cipher = crypto.createCipher(algorithm, key);
       let cryptoPhone = cipher.update(phone, 'utf8', 'hex');
       cryptoPhone += cipher.final('hex');
       // '/' 가 포함되면 파이어베이스에 자식 객체로 인식함. '/' 지우고 저장
@@ -148,11 +148,9 @@ module.exports = {
   },
 
   getTotalSurveyResult: async (req, res) => {
-    const eachSurveyItemsCnt = [7, 5, 4, 4, 2, 4, 4];
     //1. 내가 선택한 데이터들을 전부 받아와야함
-
-    const phone = req.body.phone;
-
+    const cipher = crypto.createCipher(algorithm, key);
+    let phone = req.body.phone;
     //휴대폰번호 형식이 맞는지 체크
     const checkPhone = /(01[0])([1-9]{1}[0-9]{3})([0-9]{4})$/;
     if (!checkPhone.test(phone)) {
@@ -168,141 +166,156 @@ module.exports = {
     // 프론트단에서 넘어온 핸드폰 값 암호화해서 비교
 
     //휴대폰번호 암호화
-    const cipher = crypto.createCipher(algorithm, key);
-    let encryptedPhoneNum = cipher.update(phone, 'utf8', 'hex');
-    encryptedPhoneNum += cipher.final('hex');
+
+    phone = cipher.update(phone, 'utf8', 'hex');
+    phone += cipher.final('hex');
     // '/' 가 포함되면 파이어베이스에 자식 객체로 인식함. '/' 지우고 저장
-    encryptedPhoneNum = encryptedPhoneNum.replace(/\//g, '');
+    phone = phone.replace(/\//g, '');
     //휴대폰번호 암호화 마무리
 
     try {
       // db 에 있는 암호화된 휴대폰 번호를 복호화해서 비교하려고 했으나.. (key 값도 랜덤, 초기화 벡터도 랜덤)
       // 우선은 key 값을 명시해서 암호화, 복호화 진행 (초기화 벡터 사용 X)
 
-      const dbRef = database.ref();
-      dbRef
-        .child('users') // 먼저 users db 가 있는지 확인하고, 있으면 암호화된 휴대폰 번호가 있는지 확인
-        .get()
-        .then(async (snapshot) => {
-          if (snapshot.exists()) {
-            const isEncryptedPhoneNumExists = encryptedPhoneNum in snapshot.val();
+      // const dbRef = database.ref();
+      // dbRef
+      //   .child('users') // 먼저 users db 가 있는지 확인하고, 있으면 암호화된 휴대폰 번호가 있는지 확인
+      //   .get()
+      //   .then(async (snapshot) => {
+      //     if (snapshot.exists()) {
+      //       const isEncryptedPhoneNumExists = encryptedPhoneNum in snapshot.val();
 
-            if (isEncryptedPhoneNumExists === false) {
-              return res.status(404).json({
-                code: 404,
-                message: `설문의 총 집계를 추출하던 중 없는 휴대폰 번호(설문에 참여하지 않은 고객)를 서버가 받아서 처리하지 못했습니다`,
-              });
-            }
+      // 휴대폰 번호 복호화 (나중에 필요할 때 사용.. 일단 주석 처리)
+      // const deciper = crypto.createDecipher(algorithm, key);
+      // let decryptPhone = deciper.update(encryptedPhoneNum, 'hex', 'utf8');
+      // decryptPhone += deciper.final('utf8');
+      // console.log(`복호화된 휴대폰 번호: ${decryptPhone}`);
+      //휴대폰번호 복호화 마무리
 
-            // 휴대폰 번호 복호화 (나중에 필요할 때 사용.. 일단 주석 처리)
-            // const deciper = crypto.createDecipher(algorithm, key);
-            // let decryptPhone = deciper.update(encryptedPhoneNum, 'hex', 'utf8');
-            // decryptPhone += deciper.final('utf8');
-            // console.log(`복호화된 휴대폰 번호: ${decryptPhone}`);
-            //휴대폰번호 복호화 마무리
+      const myPick = (await database.ref(`users/${phone}/surveyResList`).get()).val();
+      console.log(`myPick=${myPick}`);
 
-            const myPick = (
-              await database.ref(`users/${encryptedPhoneNum}/surveyResList`).get()
-            ).val();
-            console.log(`myPick=${myPick}`);
-
-            //2. 현재까지의 집계를 다 받아오되 , Count 내림차순으로 받아와야한다
-            var surVeyAr = [];
-            for (var i = 0; i < 7; i++) {
-              var temp = (
-                await database
-                  .ref(`surVeyQuestion`)
-                  .child(`${i}/Q${i + 1}/Q${i + 1}_List/`)
-                  .get()
-              ).val();
-              var tempAr = [];
-              for (var k = 0; k < eachSurveyItemsCnt[i]; k++) {
-                tempAr.push(temp[k][`Q${i + 1}_${k + 1}`]);
-              }
-              surVeyAr.push(tempAr);
-            }
-            //이후 내 랭킹목록의 맨위에 내 선택지를 올리기 위한 surVeyFixedAr 변수
-            const surVeyFixedAr = JSON.parse(JSON.stringify(surVeyAr));
-
-            /**
-             * 이제 내가 선택한걸 맨 위로 올리기만하면됨
-             * 반복 도는김에 순위필드까지 추가하고
-             */
-            for (var i = 0; i < 7; i++) {
-              var temp = surVeyAr[i][0];
-              var title = surVeyFixedAr[i][myPick[i] - 1]['Title'];
-
-              for (var k = 0; k < eachSurveyItemsCnt[i]; k++) {
-                if (title === surVeyAr[i][k]['Title']) {
-                  surVeyAr[i][k] = temp;
-                  break;
-                }
-              }
-              surVeyAr[i][0] = surVeyFixedAr[i][myPick[i] - 1];
-            }
-
-            //아..리소스 낭비인것같은데..만들고나서 생각해볼까
-            /**
-             * surVeyAr 를
-             * 새 형태의 배열 { Count: 3, Title: '나만의 작은 취미 만들기' } 들만 쌓인 형태로 가공 완료
-             * 이는 2차원 배열로 아래에선 각 surVeyAr[][V] 인덱스마다 내부 배열을 정렬해서 새로운 배열로 할당해야함
-             */
-
-            for (var i = 0; i < 7; i++) {
-              for (var a = 2; a < eachSurveyItemsCnt[i]; a++) {
-                for (var b = 1; b < a; b++) {
-                  if (surVeyAr[i][b]['Count'] < surVeyAr[i][a]['Count']) {
-                    var temp = surVeyAr[i][a];
-                    surVeyAr[i][a] = surVeyAr[i][b];
-                    surVeyAr[i][b] = temp;
-                  }
-                }
-              }
-            }
-
-            //순위 여기서 좀 쉽게 매겨볼까
-            for (var i = 0; i < 7; i++) {
-              var rank = 1;
-              for (var a = 1; a < eachSurveyItemsCnt[i]; a++) {
-                if (a == 1) {
-                  if (surVeyAr[i][0]['Count'] > surVeyAr[i][a]['Count']) {
-                    surVeyAr[i][0]['rank'] = rank++;
-                    surVeyAr[i][a]['rank'] = rank;
-                    continue;
-                  } else {
-                    surVeyAr[i][a]['rank'] = rank++;
-                    surVeyAr[i][0]['rank'] = rank;
-                    continue;
-                  }
-                }
-                if (surVeyAr[i][0]['Count'] < surVeyAr[i][a]['Count']) {
-                  surVeyAr[i][a]['rank'] = rank++;
-                  surVeyAr[i][0]['rank'] = rank;
-                  continue;
-                } else if (surVeyAr[i][0]['Count'] == surVeyAr[i][a]['Count']) {
-                  surVeyAr[i][a]['rank'] = rank;
-                  surVeyAr[i][0]['rank'] = rank;
-                  continue;
-                }
-                surVeyAr[i][a]['rank'] = ++rank;
-              }
-            }
-
-            //다했다 이제 surVeyAr만 넘기면됨
-            return res.status(200).json({
-              code: 200,
-              message:
-                '성공적으로 설문의 총 집계를 추출해냈습니다 1순위는 집계의 count와 관계없이 무조건 내가 선택한 항목입니다',
-              surVeyAr: surVeyAr,
-            });
-          } else {
-            console.log('No data available');
-            res.status(203).json({
-              code: 203,
-              message: `파이어베이스에 사용 가능한 사용자 데이터가 없습니다`,
-            });
-          }
+      if (!myPick) {
+        return res.status(404).json({
+          code: 404,
+          message: `설문의 총 집계를 추출하던 중 없는 휴대폰 번호(설문에 참여하지 않은 고객)를 서버가 받아서 처리하지 못했습니다, 설문에 참여한적 없는 고객입니다`,
         });
+      }
+
+      //2. 현재까지의 집계를 다 받아오되 , Count 내림차순으로 받아와야한다
+      var surVeyAr = [];
+      for (var i = 0; i < 7; i++) {
+        var temp = (
+          await database
+            .ref(`surVeyQuestion`)
+            .child(`${i}/Q${i + 1}/Q${i + 1}_List/`)
+            .get()
+        ).val();
+        var tempAr = [];
+        for (var k = 0; k < eachSurveyItemsCnt[i]; k++) {
+          tempAr.push(temp[k][`Q${i + 1}_${k + 1}`]);
+        }
+        surVeyAr.push(tempAr);
+      }
+      //이후 내 랭킹목록의 맨위에 내 선택지를 올리기 위한 surVeyFixedAr 변수
+      const surVeyFixedAr = JSON.parse(JSON.stringify(surVeyAr));
+
+      /**
+       * 이제 내가 선택한걸 맨 위로 올리기만하면됨
+       * 반복 도는김에 순위필드까지 추가하고
+       */
+      for (var i = 0; i < 7; i++) {
+        var temp = surVeyAr[i][0];
+        var title = surVeyFixedAr[i][myPick[i] - 1]['Title'];
+
+        for (var k = 0; k < eachSurveyItemsCnt[i]; k++) {
+          if (title === surVeyAr[i][k]['Title']) {
+            surVeyAr[i][k] = temp;
+            break;
+          }
+        }
+        surVeyAr[i][0] = surVeyFixedAr[i][myPick[i] - 1];
+      }
+
+      //아..리소스 낭비인것같은데..만들고나서 생각해볼까
+      /**
+       * surVeyAr 를
+       * 새 형태의 배열 { Count: 3, Title: '나만의 작은 취미 만들기' } 들만 쌓인 형태로 가공 완료
+       * 이는 2차원 배열로 아래에선 각 surVeyAr[][V] 인덱스마다 내부 배열을 정렬해서 새로운 배열로 할당해야함
+       */
+
+      for (var i = 0; i < 7; i++) {
+        for (var a = 2; a < eachSurveyItemsCnt[i]; a++) {
+          for (var b = 1; b < a; b++) {
+            if (surVeyAr[i][b]['Count'] < surVeyAr[i][a]['Count']) {
+              var temp = surVeyAr[i][a];
+              surVeyAr[i][a] = surVeyAr[i][b];
+              surVeyAr[i][b] = temp;
+            }
+          }
+        }
+      }
+
+      //순위 여기서 좀 쉽게 매겨볼까
+      for (var i = 0; i < 7; i++) {
+        var rank = 1;
+        surVeyAr[i][0]['rank'] = rank;
+
+        for (var a = 1; a < eachSurveyItemsCnt[i]; a++) {
+          if (i == 1) {
+            console.log(
+              `a : ${a} , rank : ${rank} , surVeyAr[${i}][${a}] : ${JSON.stringify(
+                surVeyAr[i][0],
+              )} , surVeyAr[${i}][${0}]['rank'] : ${surVeyAr[i][0]['rank']}\n`,
+            );
+          }
+          if (a == 1) {
+            if (surVeyAr[i][0]['Count'] > surVeyAr[i][a]['Count']) {
+              //surVeyAr[i][0]['rank'] = rank++;
+              surVeyAr[i][a]['rank'] = ++rank;
+              continue;
+            } else if (surVeyAr[i][0]['Count'] < surVeyAr[i][a]['Count']) {
+              surVeyAr[i][a]['rank'] = rank;
+              surVeyAr[i][0]['rank'] = ++rank;
+              continue;
+            } else if (surVeyAr[i][0]['Count'] == surVeyAr[i][a]['Count']) {
+              surVeyAr[i][a]['rank'] = rank;
+              surVeyAr[i][0]['rank'] = rank;
+              continue;
+            }
+          }
+          if (surVeyAr[i][0]['Count'] > surVeyAr[i][a]['Count']) {
+            //surVeyAr[i][0]['rank'] = rank++;
+            //surVeyAr[i][a]['rank'] = rank;
+            surVeyAr[i][a]['rank'] = ++rank;
+            continue;
+          } else if (surVeyAr[i][0]['Count'] < surVeyAr[i][a]['Count']) {
+            surVeyAr[i][a]['rank'] = rank;
+            surVeyAr[i][0]['rank'] = ++rank;
+            continue;
+          } else if (surVeyAr[i][0]['Count'] == surVeyAr[i][a]['Count']) {
+            surVeyAr[i][a]['rank'] = rank;
+            surVeyAr[i][0]['rank'] = rank;
+            continue;
+          }
+        }
+      }
+
+      //다했다 이제 surVeyAr만 넘기면됨
+      return res.status(200).json({
+        code: 200,
+        message:
+          '성공적으로 설문의 총 집계를 추출해냈습니다 1순위는 집계의 count와 관계없이 무조건 내가 선택한 항목입니다',
+        surVeyAr: surVeyAr,
+      });
+      // } else {
+      //   console.log('No data available');
+      //   res.status(203).json({
+      //     code: 203,
+      //     message: `파이어베이스에 사용 가능한 사용자 데이터가 없습니다`,
+      //   });
+      // }
+      //});
     } catch (e) {
       return res.status(500).json({
         code: 500,

@@ -8,7 +8,7 @@ const options = {
       version: '1.0.0',
       description: 'Janfra API with express',
     },
-    host: 'localhost:4000',
+    host: 'localhost:80',
     basePath: '/',
     tags: [
       {
@@ -781,8 +781,7 @@ const options = {
               },
             },
             201: {
-              description:
-                '사용자가 설문의 모든 문항에 답을 하지 않은 경우 코드 201을 리턴합니다',
+              description: '사용자가 설문의 모든 문항에 답을 하지 않은 경우 코드 201을 리턴합니다',
               schema: {
                 $ref: '#/definitions/apiSurveySubmit_ResponseForm_Failed201',
               },
@@ -2452,8 +2451,7 @@ const options = {
         properties: {
           code: {
             type: 'integer',
-            description:
-              '사용자가 설문의 모든 문항에 답을 하지 않은 경우 코드 201이 리턴된다',
+            description: '사용자가 설문의 모든 문항에 답을 하지 않은 경우 코드 201이 리턴된다',
           },
           message: {
             type: 'string',
@@ -2567,8 +2565,7 @@ const options = {
         properties: {
           code: {
             type: 'integer',
-            description:
-              '파이어베이스에 사용 가능한 사용자 데이터가 없는 경우 코드 203이 리턴된다',
+            description: '파이어베이스에 사용 가능한 사용자 데이터가 없는 경우 코드 203이 리턴된다',
           },
           message: {
             type: 'string',
@@ -2587,6 +2584,20 @@ const options = {
           message: {
             type: 'string',
             description: `설문의 총 집계를 추출하던중 없는 휴대폰 번호(설문에 참여하지 않은 고객)를 서버가 받아서 처리하지 못했습니다 라는 메세지가 리턴된다`,
+          },
+        },
+      },
+
+      apiGetTotalSurveyResult_ResponseForm_Failed500: {
+        properties: {
+          code: {
+            type: 'integer',
+            description:
+              '설문의 총 집계를 추출하던 중 서버 내 알 수 없는 에러가 발생 하였을 때 코드 500이 리턴됩니다',
+          },
+          message: {
+            type: 'string',
+            description: `설문의 총 집계를 추출하던 중 서버 내 알 수 없는 에러가 발생 하였을 때 코드 500이 리턴됩니다`,
           },
         },
       },
