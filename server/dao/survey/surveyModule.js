@@ -51,14 +51,20 @@ module.exports = {
       //각 Q1 , Q2 , Q3 ...들의 설문 갯수
       const eachSurveyItemsCnt = [7, 5, 4, 4, 2, 4, 4];
 
-      // 각 문항의 설문 개수를 토대로 surveyResList 의 값이 정상적인 값인지 체크
-      const checkSurveyResList = (eachSurveyItemsCnt.length == surveyResList.length) &&
-                              eachSurveyItemsCnt.every((value, idx) => value >= surveyResList[idx]);
+      // surveyResList 가 설문의 문항 수를 벗어나지 않았는지 체크 (false >> 설문 결과 리스트 중 없는 문항에 대한 데이터 존재)
+      const checkSurveyResList = eachSurveyItemsCnt.every((value, idx) => value >= surveyResList[idx] && surveyResList[idx] > 0);
+      // console.log(`checkSurveyResList = ${checkSurveyResList}`);
 
-      if (checkSurveyResList == false) {
+      // 사용자가 모든 문항에 대한 설문을 마무리했는지 확인
+      if (eachSurveyItemsCnt.length != surveyResList.length) {
+        return res.status(201).json({
+          code: 201,
+          message: `사용자가 설문의 모든 문항에 답을 하지 않았습니다.`
+        })
+      } else if (checkSurveyResList == false) { // surveyResList 가 설문의 문항 수를 벗어나지 않았는지 체크
         return res.status(203).json({
           code: 203,
-          message: `설문조사 결과 리스트에 비정상적인 문항 개수가 포함되어 있습니다.`
+          message: `사용자의 설문결과 리스트 중, 설문조사에는 없는 문항에 대한 데이터가 있습니다.`
         })
       }
 
@@ -99,11 +105,11 @@ module.exports = {
           } else {
             //2번 수행
 
-            //휴대폰번호 복호화
-            const deciper = crypto.createDecipher(algorithm, key);
-            let decryptPhone = deciper.update(cryptoPhone, 'hex', 'utf8');
-            decryptPhone += deciper.final('utf8');
-            console.log(`복호화된 휴대폰 번호: ${decryptPhone}`);
+            //휴대폰번호 복호화 (이건 나중에 필요하면 사용.. 일단은 주석 처리)
+            // const deciper = crypto.createDecipher(algorithm, key);
+            // let decryptPhone = deciper.update(cryptoPhone, 'hex', 'utf8');
+            // decryptPhone += deciper.final('utf8');
+            // console.log(`복호화된 휴대폰 번호: ${decryptPhone}`);
             //휴대폰번호 복호화 마무리
 
             await database.ref('users/').child(cryptoPhone).set({
@@ -159,11 +165,17 @@ module.exports = {
     }
 
     // bcrypt 는 단방향 암호화이기 때문에 복호화 불가능
-    // crpyto 를 사용, 휴대폰 번호 비교하는 것은 복호화해서 해야 할 듯
+    // crpyto 를 사용, 휴대폰 번호 비교하는 것은 복호화해서 해야 할 듯 >> 키 값 명시했으니까 바로 암호화해서 비교하는 것으로 수정
+    // 프론트단에서 넘어온 핸드폰 값 암호화해서 비교
     
-    /**
-     *  // 여기서 암호화 해도 똑같은 값으로 암호화 안됨..
-     */
+    //휴대폰번호 암호화
+    const cipher = crypto.createCipher(algorithm, key);
+    let encryptedPhoneNum = cipher.update(phone, 'utf8', 'hex');
+    encryptedPhoneNum += cipher.final('hex');
+    // '/' 가 포함되면 파이어베이스에 자식 객체로 인식함. '/' 지우고 저장
+    encryptedPhoneNum = encryptedPhoneNum.replace(/\//g, "");
+    console.log(`암호화된 휴대폰 번호: ${encryptedPhoneNum}`);
+    //휴대폰번호 암호화 마무리
 
     try {
       // db 에 있는 암호화된 휴대폰 번호를 복호화해서 비교하려고 했으나.. (key 값도 랜덤, 초기화 벡터도 랜덤)
@@ -171,46 +183,30 @@ module.exports = {
 
       const dbRef = database.ref();
       dbRef
-      .child('users')
+      .child('users') // 먼저 users db 가 있는지 확인하고, 있으면 암호화된 휴대폰 번호가 있는지 확인
       .get()
       .then(async (snapshot) => {
         if (snapshot.exists()) {
           // console.log(`db=${JSON.stringify(snapshot.val())}`);
-          // console.log(`핸드폰 존재하는지: ${cryptoPhone in snapshot.val()}`);
-          // cryptoPhone = Object.keys(snapshot.val())[46];
+          // console.log(`핸드폰 존재하는지: ${encryptedPhoneNum in snapshot.val()}`);
 
-          let cryptoPhone;
-          let decryptPhone;
-          let j = 0;
-          let flag = false;
+          const isEncryptedPhoneNumExists = encryptedPhoneNum in snapshot.val();
 
-          // 휴대폰 번호 복호화해서 프론트단에서 넘어온 휴대폰 번호와 같은 값 찾기
-          while (j < Object.keys(snapshot.val()).length) {
-            cryptoPhone = Object.keys(snapshot.val())[j];
-            // 휴대폰 번호 복호화
-            const deciper = crypto.createDecipher(algorithm, key);
-            decryptPhone = deciper.update(cryptoPhone, 'hex', 'utf8');
-            decryptPhone += deciper.final('utf8');
-            console.log(`복호화된 휴대폰 번호: ${decryptPhone}`);
-            //휴대폰번호 복호화 마무리
-
-            if (decryptPhone === phone) {
-              flag = true;
-              break;
-            }
-            j++;
-          }
-
-          console.log(`여기서 cryptoPhone 값은? ${cryptoPhone}`);
-
-          if (flag === false) {
+          if (isEncryptedPhoneNumExists === false) {
             return res.status(404).json({
               code: 404,
               message: `설문의 총 집계를 추출하던 중 없는 휴대폰 번호(설문에 참여하지 않은 고객)를 서버가 받아서 처리하지 못했습니다`,
             })
           }
 
-          const myPick = (await database.ref(`users/${cryptoPhone}/surveyResList`).get()).val();
+          // 휴대폰 번호 복호화 (나중에 필요할 때 사용.. 일단 주석 처리)
+          // const deciper = crypto.createDecipher(algorithm, key);
+          // let decryptPhone = deciper.update(encryptedPhoneNum, 'hex', 'utf8');
+          // decryptPhone += deciper.final('utf8');
+          // console.log(`복호화된 휴대폰 번호: ${decryptPhone}`);
+          //휴대폰번호 복호화 마무리
+
+          const myPick = (await database.ref(`users/${encryptedPhoneNum}/surveyResList`).get()).val();
           console.log(`myPick=${myPick}`);
             
           //2. 현재까지의 집계를 다 받아오되 , Count 내림차순으로 받아와야한다
@@ -306,7 +302,7 @@ module.exports = {
           console.log('No data available');
           res.status(203).json({
             code: 203,
-            message: `파이어베이스에 사용 가능한 데이터가 없습니다`,
+            message: `파이어베이스에 사용 가능한 사용자 데이터가 없습니다`,
           });
         }
       })

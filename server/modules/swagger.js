@@ -780,6 +780,13 @@ const options = {
                 $ref: '#/definitions/apiSurveySubmit_ResponseForm_Success200',
               },
             },
+            201: {
+              description:
+                '사용자가 설문의 모든 문항에 답을 하지 않은 경우 코드 201을 리턴합니다',
+              schema: {
+                $ref: '#/definitions/apiSurveySubmit_ResponseForm_Failed201',
+              },
+            },
             202: {
               description:
                 '사용자가 입력한 휴대폰 번호가 휴대폰 번호의 형식에 맞지 않는 경우 코드 202를 리턴합니다',
@@ -789,7 +796,7 @@ const options = {
             },
             203: {
               description:
-                '설문조사 결과 리스트에 비정상적인 문항 개수가 포함되어 있는 경우 코드 203을 리턴합니다',
+                '사용자의 설문결과 리스트 중, 설문조사에는 없는 문항에 대한 데이터가 있는 경우 코드 203을 리턴합니다',
               schema: {
                 $ref: '#/definitions/apiSurveySubmit_ResponseForm_Failed203',
               },
@@ -844,7 +851,7 @@ const options = {
             },
             203: {
               description:
-                '파이어베이스에 사용 가능한 데이터가 없는 경우 코드 203을 리턴합니다',
+                '파이어베이스에 사용 가능한 사용자 데이터가 없는 경우 코드 203을 리턴합니다',
               schema: {
                 $ref: '#/definitions/apiGetTotalSurveyResult_ResponseForm_Failed203',
               },
@@ -2441,6 +2448,19 @@ const options = {
           },
         },
       },
+      apiSurveySubmit_ResponseForm_Failed201: {
+        properties: {
+          code: {
+            type: 'integer',
+            description:
+              '사용자가 설문의 모든 문항에 답을 하지 않은 경우 코드 201이 리턴된다',
+          },
+          message: {
+            type: 'string',
+            description: `사용자가 설문의 모든 문항에 답을 하지 않았습니다 라는 메세지가 리턴된다`,
+          },
+        },
+      },
       apiSurveySubmit_ResponseForm_Failed202: {
         properties: {
           code: {
@@ -2459,11 +2479,11 @@ const options = {
           code: {
             type: 'integer',
             description:
-              '설문조사 결과 리스트에 비정상적인 문항 개수가 포함되어 있다면 코드 203이 리턴된다',
+              '사용자의 설문결과 리스트 중, 설문조사에는 없는 문항에 대한 데이터가 있는 경우 코드 203이 리턴된다',
           },
           message: {
             type: 'string',
-            description: `설문조사 결과 리스트에 비정상적인 문항 개수가 포함되어 있습니다 라는 메세지가 리턴된다`,
+            description: `사용자의 설문결과 리스트 중, 설문조사에는 없는 문항에 대한 데이터가 있습니다 라는 메세지가 리턴된다`,
           },
         },
       },
@@ -2548,11 +2568,11 @@ const options = {
           code: {
             type: 'integer',
             description:
-              '파이어베이스에 사용 가능한 데이터가 없는 경우 코드 203이 리턴된다',
+              '파이어베이스에 사용 가능한 사용자 데이터가 없는 경우 코드 203이 리턴된다',
           },
           message: {
             type: 'string',
-            description: `파이어베이스에 사용 가능한 데이터가 없습니다 라는 메세지가 리턴된다`,
+            description: `파이어베이스에 사용 가능한 사용자 데이터가 없습니다 라는 메세지가 리턴된다`,
           },
         },
       },
