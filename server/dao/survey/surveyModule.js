@@ -10,7 +10,6 @@ module.exports = {
       .get()
       .then((snapshot) => {
         if (snapshot.exists()) {
-          // console.log(`db=${Object.keys(snapshot.val())}`);
           const countParticipants = Object.keys(snapshot.val()).length;
 
           res.status(200).json({
@@ -52,20 +51,22 @@ module.exports = {
       const eachSurveyItemsCnt = [7, 5, 4, 4, 2, 4, 4];
 
       // surveyResList 가 설문의 문항 수를 벗어나지 않았는지 체크 (false >> 설문 결과 리스트 중 없는 문항에 대한 데이터 존재)
-      const checkSurveyResList = eachSurveyItemsCnt.every((value, idx) => value >= surveyResList[idx] && surveyResList[idx] > 0);
-      // console.log(`checkSurveyResList = ${checkSurveyResList}`);
+      const checkSurveyResList = eachSurveyItemsCnt.every(
+        (value, idx) => value >= surveyResList[idx] && surveyResList[idx] > 0,
+      );
 
       // 사용자가 모든 문항에 대한 설문을 마무리했는지 확인
       if (eachSurveyItemsCnt.length != surveyResList.length) {
         return res.status(201).json({
           code: 201,
-          message: `사용자가 설문의 모든 문항에 답을 하지 않았습니다.`
-        })
-      } else if (checkSurveyResList == false) { // surveyResList 가 설문의 문항 수를 벗어나지 않았는지 체크
+          message: `사용자가 설문의 모든 문항에 답을 하지 않았습니다.`,
+        });
+      } else if (checkSurveyResList == false) {
+        // surveyResList 가 설문의 문항 수를 벗어나지 않았는지 체크
         return res.status(203).json({
           code: 203,
-          message: `사용자의 설문결과 리스트 중, 설문조사에는 없는 문항에 대한 데이터가 있습니다.`
-        })
+          message: `사용자의 설문결과 리스트 중, 설문조사에는 없는 문항에 대한 데이터가 있습니다.`,
+        });
       }
 
       //휴대폰번호 형식이 맞는지 체크
@@ -75,7 +76,7 @@ module.exports = {
         return res.status(202).json({
           code: 202,
           message: `사용자가 입력한 휴대폰 번호가 형식에 맞지 않습니다.`,
-        })
+        });
       }
 
       //휴대폰번호 암호화
@@ -84,9 +85,7 @@ module.exports = {
       let cryptoPhone = cipher.update(phone, 'utf8', 'hex');
       cryptoPhone += cipher.final('hex');
       // '/' 가 포함되면 파이어베이스에 자식 객체로 인식함. '/' 지우고 저장
-      cryptoPhone = cryptoPhone.replace(/\//g, "");
-      console.log(`암호화된 휴대폰 번호: ${cryptoPhone}`);
-      // console.log(`key: ${atob(key)}`);
+      cryptoPhone = cryptoPhone.replace(/\//g, '');
       //휴대폰번호 암호화 마무리
 
       //2. users 테이블에 설문한 유저의 설문데이터 기록
@@ -161,20 +160,19 @@ module.exports = {
       return res.status(202).json({
         code: 202,
         message: `사용자가 입력한 휴대폰 번호가 형식에 맞지 않습니다.`,
-      })
+      });
     }
 
     // bcrypt 는 단방향 암호화이기 때문에 복호화 불가능
     // crpyto 를 사용, 휴대폰 번호 비교하는 것은 복호화해서 해야 할 듯 >> 키 값 명시했으니까 바로 암호화해서 비교하는 것으로 수정
     // 프론트단에서 넘어온 핸드폰 값 암호화해서 비교
-    
+
     //휴대폰번호 암호화
     const cipher = crypto.createCipher(algorithm, key);
     let encryptedPhoneNum = cipher.update(phone, 'utf8', 'hex');
     encryptedPhoneNum += cipher.final('hex');
     // '/' 가 포함되면 파이어베이스에 자식 객체로 인식함. '/' 지우고 저장
-    encryptedPhoneNum = encryptedPhoneNum.replace(/\//g, "");
-    console.log(`암호화된 휴대폰 번호: ${encryptedPhoneNum}`);
+    encryptedPhoneNum = encryptedPhoneNum.replace(/\//g, '');
     //휴대폰번호 암호화 마무리
 
     try {
@@ -183,33 +181,32 @@ module.exports = {
 
       const dbRef = database.ref();
       dbRef
-      .child('users') // 먼저 users db 가 있는지 확인하고, 있으면 암호화된 휴대폰 번호가 있는지 확인
-      .get()
-      .then(async (snapshot) => {
-        if (snapshot.exists()) {
-          // console.log(`db=${JSON.stringify(snapshot.val())}`);
-          // console.log(`핸드폰 존재하는지: ${encryptedPhoneNum in snapshot.val()}`);
+        .child('users') // 먼저 users db 가 있는지 확인하고, 있으면 암호화된 휴대폰 번호가 있는지 확인
+        .get()
+        .then(async (snapshot) => {
+          if (snapshot.exists()) {
+            const isEncryptedPhoneNumExists = encryptedPhoneNum in snapshot.val();
 
-          const isEncryptedPhoneNumExists = encryptedPhoneNum in snapshot.val();
+            if (isEncryptedPhoneNumExists === false) {
+              return res.status(404).json({
+                code: 404,
+                message: `설문의 총 집계를 추출하던 중 없는 휴대폰 번호(설문에 참여하지 않은 고객)를 서버가 받아서 처리하지 못했습니다`,
+              });
+            }
 
-          if (isEncryptedPhoneNumExists === false) {
-            return res.status(404).json({
-              code: 404,
-              message: `설문의 총 집계를 추출하던 중 없는 휴대폰 번호(설문에 참여하지 않은 고객)를 서버가 받아서 처리하지 못했습니다`,
-            })
-          }
+            // 휴대폰 번호 복호화 (나중에 필요할 때 사용.. 일단 주석 처리)
+            // const deciper = crypto.createDecipher(algorithm, key);
+            // let decryptPhone = deciper.update(encryptedPhoneNum, 'hex', 'utf8');
+            // decryptPhone += deciper.final('utf8');
+            // console.log(`복호화된 휴대폰 번호: ${decryptPhone}`);
+            //휴대폰번호 복호화 마무리
 
-          // 휴대폰 번호 복호화 (나중에 필요할 때 사용.. 일단 주석 처리)
-          // const deciper = crypto.createDecipher(algorithm, key);
-          // let decryptPhone = deciper.update(encryptedPhoneNum, 'hex', 'utf8');
-          // decryptPhone += deciper.final('utf8');
-          // console.log(`복호화된 휴대폰 번호: ${decryptPhone}`);
-          //휴대폰번호 복호화 마무리
+            const myPick = (
+              await database.ref(`users/${encryptedPhoneNum}/surveyResList`).get()
+            ).val();
+            console.log(`myPick=${myPick}`);
 
-          const myPick = (await database.ref(`users/${encryptedPhoneNum}/surveyResList`).get()).val();
-          console.log(`myPick=${myPick}`);
-            
-          //2. 현재까지의 집계를 다 받아오되 , Count 내림차순으로 받아와야한다
+            //2. 현재까지의 집계를 다 받아오되 , Count 내림차순으로 받아와야한다
             var surVeyAr = [];
             for (var i = 0; i < 7; i++) {
               var temp = (
@@ -298,14 +295,14 @@ module.exports = {
                 '성공적으로 설문의 총 집계를 추출해냈습니다 1순위는 집계의 count와 관계없이 무조건 내가 선택한 항목입니다',
               surVeyAr: surVeyAr,
             });
-        } else {
-          console.log('No data available');
-          res.status(203).json({
-            code: 203,
-            message: `파이어베이스에 사용 가능한 사용자 데이터가 없습니다`,
-          });
-        }
-      })
+          } else {
+            console.log('No data available');
+            res.status(203).json({
+              code: 203,
+              message: `파이어베이스에 사용 가능한 사용자 데이터가 없습니다`,
+            });
+          }
+        });
     } catch (e) {
       return res.status(500).json({
         code: 500,
