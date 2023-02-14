@@ -4,6 +4,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 
 dotenv.config({ path: '../.env' });
 //dotenv.config({ path: "../../configs/.env" });
@@ -52,6 +53,23 @@ app.use(cookieParser());
  */
 
 app.use(cors());
+
+/**
+ * DDos 공격 방어
+ * 모든 요청에 대해
+ * ip당 1분간 들어오는 request 숫자를 50으로 제한 (1초 간격) -> 확인할 것
+ */
+app.use(rateLimit({
+  windowMs: 1*60*1000,
+  max: 20,
+  delayMs: 1000,
+  handler(req, res) {
+    res.status(429).json({
+      code: 429,
+      message: `모든 요청에 대해 1분에 20번만 요청할 수 있습니다.`
+    });
+  }
+}));
 
 //swagger.js
 const { swaggerUi, specs } = require('./modules/swagger');
