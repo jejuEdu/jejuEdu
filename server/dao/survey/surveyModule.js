@@ -1,7 +1,7 @@
 const database = require('../../firebase/config');
 const crypto = require('crypto');
 const { algorithm, key } = require('../../crypto/crypto');
-const eachSurveyItemsCnt = [7, 5, 4, 4, 2, 4, 4];
+const eachSurveyItemsCnt = [7, 5, 4, 5, 2, 4, 4];
 
 module.exports = {
   count: async (req, res) => {
@@ -53,7 +53,7 @@ module.exports = {
 
       // surveyResList 가 설문의 문항 수를 벗어나지 않았는지 체크 (false >> 설문 결과 리스트 중 없는 문항에 대한 데이터 존재)
       const checkSurveyResList = eachSurveyItemsCnt.every(
-        (value, idx) => value >= surveyResList[idx] && surveyResList[idx] > 0,
+        (value, idx) => value >= surveyResList[idx] && surveyResList[idx] > 0
       );
 
       // 사용자가 모든 문항에 대한 설문을 마무리했는지 확인

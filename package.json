@@ -8,8 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "devOrigin": "concurrently \"npm run backend\" \"npm run start --prefix client\"",
     "dev": "concurrently \"node server/app.js\" \"npm run start --prefix client\"",
-    "gitPush" : "git add . && git commit -m '새 서버 빌드' && git push https://github.com/DHAPARK/jeju-edu.git master",
-    "jenfra" : "npm run gitPush"
+    "gitPush": "git add . && git commit -m '새 서버 빌드' && git push https://github.com/DHAPARK/jeju-edu.git master",
+    "jenfra": "npm run gitPush"
   },
   "repository": {
     "type": "git",
@@ -23,10 +23,14 @@
   },
   "homepage": "https://github.com/JadeHyun/jeju-edu#readme",
   "nodemonConfig": {
-    "ignore": ["server/models/*"]
+    "ignore": [
+      "server/models/*"
+    ]
   },
   "dependencies": {
     "concurrently": "^7.6.0",
-    "nodemon": "^2.0.20"
+    "express-rate-limit": "^6.7.0",
+    "nodemon": "^2.0.20",
+    "react-redux": "^8.0.5"
   }
 }
