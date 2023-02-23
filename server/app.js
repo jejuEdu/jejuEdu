@@ -22,14 +22,17 @@ const app = express();
 
 app.set('port', process.env.PORT || 80);
 
-sequelize
-  .sync({ force: false })
-  .then(() => {
-    console.log('데이터베이스 연결 성공');
-  })
-  .catch((err) => {
-    console.error(err);
-  });
+/**
+ * 설문조사 때만 주석처리
+ */
+// sequelize
+//   .sync({ force: false })
+//   .then(() => {
+//     console.log('데이터베이스 연결 성공');
+//   })
+//   .catch((err) => {
+//     console.error(err);
+//   });
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -75,9 +78,12 @@ app.use(rateLimit({
 const { swaggerUi, specs } = require('./modules/swagger');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-app.use('/', pageRouter);
-app.use('/api/auth', authRouter);
-app.use('/api', apiRouter);
+/**
+ * 설문조사 때만 주석처리
+ */
+// app.use('/', pageRouter);
+// app.use('/api/auth', authRouter);
+// app.use('/api', apiRouter);
 app.use('/api/survey', surveyRouter);
 
 app.use((req, res, next) => {

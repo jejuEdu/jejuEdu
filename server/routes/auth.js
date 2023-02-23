@@ -18,13 +18,14 @@ const {
 } = require('../dao/user/userModule');
 
 const { sendVerificationsSMS, verifySMSMsg, getNewPw } = require('../dto/NVsens');
-/*
-const {
+
+/*const {
   sendVerificationsSMS,
   verifySMSMsg,
   getNewPw,
 } = require("../../../configs/dto/NVsens");
 */
+
 router.get('/message/code', userAgentMiddleWare('/api/auth/message/code'), sendVerificationsSMS);
 
 router.get(
