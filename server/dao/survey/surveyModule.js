@@ -53,7 +53,7 @@ module.exports = {
 
       // surveyResList 가 설문의 문항 수를 벗어나지 않았는지 체크 (false >> 설문 결과 리스트 중 없는 문항에 대한 데이터 존재)
       const checkSurveyResList = eachSurveyItemsCnt.every(
-        (value, idx) => value >= surveyResList[idx] && surveyResList[idx] > 0
+        (value, idx) => value >= surveyResList[idx] && surveyResList[idx] > 0,
       );
 
       // 사용자가 모든 문항에 대한 설문을 마무리했는지 확인
@@ -132,6 +132,7 @@ module.exports = {
             //1번 마무리
             return res.status(200).json({
               code: 200,
+              cryptoPhone: cryptoPhone,
               message: `파이어베이스에 유저 설문데이터, 총 집계 데이터가 성공적으로 저장되었습니다`,
             });
           }
@@ -149,9 +150,10 @@ module.exports = {
 
   getTotalSurveyResult: async (req, res) => {
     //1. 내가 선택한 데이터들을 전부 받아와야함
-    const cipher = crypto.createCipher(algorithm, key);
+    //const cipher = crypto.createCipher(algorithm, key);
     let phone = req.body.phone;
     //휴대폰번호 형식이 맞는지 체크
+    /*
     const checkPhone = /(01[0])([1-9]{1}[0-9]{3})([0-9]{4})$/;
     if (!checkPhone.test(phone)) {
       // 휴대폰번호 형식에 맞지 않는 경우
@@ -160,19 +162,19 @@ module.exports = {
         message: `사용자가 입력한 휴대폰 번호가 형식에 맞지 않습니다.`,
       });
     }
-
+    */
     // bcrypt 는 단방향 암호화이기 때문에 복호화 불가능
     // crpyto 를 사용, 휴대폰 번호 비교하는 것은 복호화해서 해야 할 듯 >> 키 값 명시했으니까 바로 암호화해서 비교하는 것으로 수정
     // 프론트단에서 넘어온 핸드폰 값 암호화해서 비교
 
     //휴대폰번호 암호화
-
+    /*
     phone = cipher.update(phone, 'utf8', 'hex');
     phone += cipher.final('hex');
     // '/' 가 포함되면 파이어베이스에 자식 객체로 인식함. '/' 지우고 저장
     phone = phone.replace(/\//g, '');
     //휴대폰번호 암호화 마무리
-
+    */
     try {
       // db 에 있는 암호화된 휴대폰 번호를 복호화해서 비교하려고 했으나.. (key 값도 랜덤, 초기화 벡터도 랜덤)
       // 우선은 key 값을 명시해서 암호화, 복호화 진행 (초기화 벡터 사용 X)

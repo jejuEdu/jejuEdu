@@ -2441,6 +2441,10 @@ const options = {
             description:
               '파이어베이스에 설문 참여자의 설문데이터 저장, 총 집계 갱신이 성공하면 코드 200이 리턴된다',
           },
+          phone: {
+            type: 'string',
+            description: '설문조사를 진행한 유저의 휴대폰 번호가 암호화가 되서 return 됩니다',
+          },
           message: {
             type: 'string',
             description: `파이어베이스에 설문 참여자의 설문데이터 저장, 총 집계 갱신이 완료되면 성공적으로 저장되었습니다 라는 메세지가 리턴된다`,
