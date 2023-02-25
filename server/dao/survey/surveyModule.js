@@ -71,7 +71,7 @@ module.exports = {
       }
 
       //휴대폰번호 형식이 맞는지 체크
-      const checkPhone = /(01[0])([0-9]{8})$/;
+      const checkPhone = /(01[0])([0-9]{8})/;
       if (!checkPhone.test(phone)) {
         // 휴대폰번호 형식에 맞지 않는 경우
         return res.status(202).json({
