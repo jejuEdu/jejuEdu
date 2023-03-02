@@ -13,6 +13,7 @@ const surveyRouter = require('./routes/survey');
 const pageRouter = require('./routes/page');
 const authRouter = require('./routes/auth');
 const apiRouter = require('./routes/api');
+const openaiRouter = require('./routes/openai');
 
 const { sequelize } = require('./models');
 
@@ -87,6 +88,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // app.use('/api/auth', authRouter);
 // app.use('/api', apiRouter);
 app.use('/api/survey', surveyRouter);
+app.use('/api/openai', openaiRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
