@@ -1,6 +1,6 @@
 <div align=center><img src="https://user-images.githubusercontent.com/56211193/202861953-357a598b-689c-4cc8-b7ab-c8298a5eb935.png">
   
-  <a href="http://9oormthon.s3-website.ap-northeast-2.amazonaws.com" target="_blank">Jenfra </a>
+  <a href="http://dhparkland.site:443/goGroomTon3" target="_blank">Jenfra </a>
 
 제주의 인프라를 책임지는 <strong>Jenfra</strong>에요!<br/>스터디원을 구하고 성장해보세요!
 
